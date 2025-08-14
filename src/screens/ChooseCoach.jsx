@@ -43,7 +43,7 @@ const tutors = [
  */
 function ChooseCoach() {
   // Access shared context values (userName and updateUserName) from the AppProvider
-  const { tutor, updateTutor } = useAppContext();
+  const { user, tutor, updateTutor } = useAppContext();
 
   // For routing across pages.
   const navigate = useNavigate();
