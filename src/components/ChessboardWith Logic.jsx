@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
 
-export default function ChessGameWithLogic(){
+export default function ChessboardWithLogic(){
     const [game] = (new Chess());
     const [position, setPosition] = useState("start");
 
