@@ -1,38 +1,35 @@
 // src/screens/Welcome.jsx
 
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import Button from "../components/Button";
 import logo from "../assets/matemind-logo.png";
 import { useNavigate } from "react-router-dom";
-import { signInWithGoogle, getRedirectedUser } from "../firebase/firebaseAuth";
+import { signInWithGooglePopup } from "../firebase/firebaseAuth";
 import { useAppContext } from "../context/AppContext";
 
 function Welcome() {
   // Always call hooks at the top
   const navigate = useNavigate();
+  // We only need currentUser, authLoading, and setUserName from context
   const { currentUser, authLoading, setUserName } = useAppContext();
 
-  // Auto-navigate if user is already logged in
+  // This single useEffect is now sufficient to handle all navigation logic.
+  // It will run when the authLoading or currentUser state changes.
   useEffect(() => {
-    if (!authLoading && currentUser) {
+    // Check if authentication has finished loading and if a user is logged in.
+    // Also, ensure we are on the root path to prevent unwanted navigation from other pages.
+    if (!authLoading && currentUser && location.pathname === "/") {
+      // Set the user name and navigate to the next screen.
       setUserName(currentUser.displayName || "Player");
       navigate("/choose-tutor");
     }
-  }, [authLoading, currentUser, navigate, setUserName]);
+  }, [authLoading, currentUser, location.pathname]);
 
-  // Handle redirect-based Google sign-in fallback
-  useEffect(() => {
-    getRedirectedUser().then((user) => {
-      if (user) {
-        setUserName(user.displayName || "Player");
-        navigate("/choose-tutor");
-      }
-    });
-  }, [navigate, setUserName]);
 
   // Trigger Google Sign-In (redirect flow)
   const handleGoogleLogin = () => {
-    signInWithGoogle(); // This will redirect
+    // This will redirect the user to Google for authentication.
+    signInWithGooglePopup(); 
   };
 
   // Guest login
@@ -41,12 +38,16 @@ function Welcome() {
     navigate("/choose-tutor");
   };
 
-  // Show loading while auth is being checked
+  // Show a loading screen while the auth state is being checked.
   if (authLoading) {
-    return <div className="text-white text-center mt-10">Loading...</div>;
+    return (
+      <div className="min-h-screen bg-blue-900 text-white flex items-center justify-center">
+        <div className="text-center text-lg font-medium">Authenticating...</div>
+      </div>
+    );
   }
 
-  // Show login options
+  // Show login options once authentication is complete.
   return (
     <div className="min-h-screen bg-blue-900 text-white flex flex-col items-center justify-center gap-8 px-4 text-center">
       <img
