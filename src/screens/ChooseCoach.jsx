@@ -43,7 +43,7 @@ const tutors = [
  */
 function ChooseCoach() {
   // Access shared context values (userName and updateUserName) from the AppProvider
-  const { user, tutor, updateTutor } = useAppContext();
+  const { user, tutor, setSelectedTutor } = useAppContext();
 
   // For routing across pages.
   const navigate = useNavigate();
@@ -52,10 +52,10 @@ function ChooseCoach() {
   const handleTutorSelect = (t) => {
 
       // Use updateTutor to set the selected tutor.
-      updateTutor(t);
+      setSelectedTutor(t);
 
       // Use navigate() to send user to QuizIntro.jsx
-      navigate("/quiz-intro");
+      navigate("/test-match");
   };
 
   return (
